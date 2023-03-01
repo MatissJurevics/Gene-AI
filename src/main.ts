@@ -11,11 +11,10 @@ import {
 import { Configuration, OpenAIApi } from "openai";
 import * as dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 import { TranslatePrompt, EditPrompt } from "./modals";
+import { SettingTab } from "./settings/settings";
 
 dotenv.config();
 // Remember to rename these classes and interfaces!
-
-
 
 interface MyPluginSettings {
 	apiKey: string;
@@ -39,7 +38,7 @@ const DEFAULT_SETTINGS: MyPluginSettings = {
 	model: "text-davinci-003",
 };
 
-export default class MyPlugin extends Plugin {
+export default class GeneAI extends Plugin {
 	settings: MyPluginSettings;
 
 	async onload() {
@@ -47,9 +46,8 @@ export default class MyPlugin extends Plugin {
 		const configuration = new Configuration({
 			apiKey: this.settings.apiKey, // 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
 		});
-		
+
 		const openai = new OpenAIApi(configuration);
-		
 
 		// This adds a simple command that can be triggered anywhere
 		this.addCommand({
@@ -93,7 +91,6 @@ export default class MyPlugin extends Plugin {
 					new Notice("Please set your API key in the settings");
 					return;
 				}
-				console.log(this.settings.apiKey)
 				const prompt = editor.getSelection();
 				const context = editor
 					.getRange(
@@ -137,12 +134,10 @@ export default class MyPlugin extends Plugin {
 					)
 					.trim();
 				let language = "english";
-				
 
 				new TranslatePrompt(this.app, async (result) => {
 					language = result;
 					let message = `Provided context (which may or may not be relavent): "${context}", Translate the following: "${prompt}" into ${language}`;
-					console.log(message);
 					new Notice("📖 Translating...");
 					const completion = await openai.createCompletion({
 						model: this.settings.model,
@@ -150,9 +145,6 @@ export default class MyPlugin extends Plugin {
 						temperature: this.settings.temperature,
 						max_tokens: this.settings.translateTokens,
 					});
-					console.log(
-						`completion: ${completion.data.choices[0].text?.trim()}`
-					);
 
 					editor.replaceSelection(
 						completion.data.choices[0].text.trim()
@@ -178,7 +170,7 @@ export default class MyPlugin extends Plugin {
 					)
 					.trim();
 				let message: string;
-				
+
 				new EditPrompt(this.app, async (result) => {
 					message = `Provided context (which may or may not be relavent): "${context}", Edit the following: "${prompt}" so that the following demand is met: "${result}"`;
 					new Notice("Loading...");
@@ -189,13 +181,14 @@ export default class MyPlugin extends Plugin {
 						max_tokens: this.settings.modifyTokens,
 					});
 
-					editor.replaceSelection(completion.data.choices[0].text.trim());
+					editor.replaceSelection(
+						completion.data.choices[0].text.trim()
+					);
 					new Notice("Edited! 🚀");
 				}).open();
-				
-			}
-		})
-		
+			},
+		});
+
 		this.addCommand({
 			id: "elaborate",
 			name: "Elaborate",
@@ -223,11 +216,10 @@ export default class MyPlugin extends Plugin {
 				);
 
 				new Notice("Elaborated! 🚀");
-			}
+			},
 		});
 		// This adds a settings tab so the user can configure various aspects of the plugin
-		this.addSettingTab(new SampleSettingTab(this.app, this));
-
+		this.addSettingTab(new SettingTab(this.app, this));
 
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
 		this.registerInterval(
@@ -250,138 +242,3 @@ export default class MyPlugin extends Plugin {
 	}
 }
 
-
-
-class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
-
-	constructor(app: App, plugin: MyPlugin) {
-		super(app, plugin);
-		this.plugin = plugin;
-	}
-
-	display(): void {
-		const { containerEl } = this;
-
-		containerEl.empty();
-
-		containerEl.createEl("h1", { text: "Gene 🧬, An AI Assistant" });
-		containerEl.createEl("h2", { text: "OpenAI API" });
-
-		new Setting(containerEl)
-			.setName("Api Key")
-			.setDesc("Your OpenAI API Key")
-			.addText((text) =>
-				text
-					.setValue(this.plugin.settings.apiKey)
-					.onChange(async (value) => {
-						this.plugin.settings.apiKey = value;
-						await this.plugin.saveSettings();
-					})
-			);
-		
-		containerEl.createEl("h2", { text: "Tokens" });
-		containerEl.createEl("p", { text: "Tokens are used when creating text, the more tokens you use, the more words the AI will be able to write, 1k tokens (~750 words) cost about $0.02. (Note that the price changes with the model used)" });
-
-		new Setting(containerEl)
-			.setName("Summarise")
-			.setDesc("Tokens used for summarising")
-			.addSlider((val) =>
-				val
-					.setLimits(8, 1024, 8)
-					.setValue(this.plugin.settings.summariseTokens)
-					.setDynamicTooltip()
-					.onChange(async (value: number) => {
-						this.plugin.settings.summariseTokens = value;
-						await this.plugin.saveSettings();
-					})
-			);
-
-		new Setting(containerEl)
-			.setName("Translate")
-			.setDesc("Tokens used for translating")
-			.addSlider((val) =>
-				val
-					.setLimits(8, 1024, 8)
-					.setValue(this.plugin.settings.translateTokens)
-					.setDynamicTooltip()
-					.onChange(async (value: number) => {
-						this.plugin.settings.translateTokens = value;
-						await this.plugin.saveSettings();
-					})
-			);
-		
-		new Setting(containerEl)
-			.setName("AI Completion")
-			.setDesc("Tokens used for AI completion")
-			.addSlider((val) =>
-				val
-					.setLimits(8, 1024, 8)
-					.setValue(this.plugin.settings.completionTokens)
-					.setDynamicTooltip()
-					.onChange(async (value: number) => {
-						this.plugin.settings.completionTokens = value;
-						await this.plugin.saveSettings();
-					})
-			);
-		
-		new Setting(containerEl)
-			.setName("Edit")
-			.setDesc("Tokens used for editing")
-			.addSlider((val) =>
-				val
-					.setLimits(8, 1024, 8)
-					.setValue(this.plugin.settings.modifyTokens)
-					.setDynamicTooltip()
-					.onChange(async (value: number) => {
-						this.plugin.settings.modifyTokens = value;
-						await this.plugin.saveSettings();
-					})
-			);
-		
-		new Setting(containerEl)
-			.setName("Elaborate")
-			.setDesc("Tokens used for elaborating")
-			.addSlider((val) =>
-				val
-					.setLimits(8, 1024, 8)
-					.setValue(this.plugin.settings.elaborateTokens)
-					.setDynamicTooltip()
-					.onChange(async (value: number) => {
-						this.plugin.settings.elaborateTokens = value;
-						await this.plugin.saveSettings();
-					})
-			);
-
-		containerEl.createEl("h2", { text: "Other" });
-		new Setting(containerEl)
-			.setName("Temperature")
-			.setDesc("The temperature of the AI, the higher the temperature, the more random the output will be")
-			.addSlider((val) =>
-				val
-					.setLimits(0.1, 1, 0.1)
-					.setValue(this.plugin.settings.temperature)
-					.setDynamicTooltip()
-					.onChange(async (value: number) => {
-						this.plugin.settings.temperature = value;
-						await this.plugin.saveSettings();
-					})
-			);
-		
-		new Setting(containerEl)
-			.setName("Model")
-			.setDesc("The model used for the AI. Different models have different strengths and weaknesses. (Note that the price changes with the model used)")
-			.addDropdown((val) =>
-				val
-					.addOption("text-davinci-003", "Davinci")
-					.addOption("text-curie-002", "Curie")
-					.addOption("text-babbage-002", "Babbage")
-					.addOption("text-ada-002", "Ada")
-					.setValue(this.plugin.settings.model)
-					.onChange(async (value: string) => {
-						this.plugin.settings.model = value;
-						await this.plugin.saveSettings();
-					})
-			);
-	}
-}
