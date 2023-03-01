@@ -12,7 +12,7 @@ export class TranslatePrompt extends Modal {
   onOpen() {
     const { contentEl } = this;
 
-
+    contentEl.createEl("div", { cls: "space" });
     new Setting(contentEl)
       .setName("Language 🚀")
       .addText((text) =>

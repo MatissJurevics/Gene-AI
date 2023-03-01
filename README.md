@@ -1,6 +1,6 @@
 # Gene: An AI assistant for Obsidian
 
-Gene is a GPT powered AI assistant which allows you to create, modify and enhance your notes!
+Gene is a Free and open source GPT3 powered AI assistant which allows you to create, modify and enhance your notes.
 
 ## Features 
 
@@ -22,3 +22,8 @@ Gene leverages the openai API to allow you to:
 ## Plans
 
 - Shortcut to have Gene help generate ideas (Like Notion AI)
+
+## Sponsor
+
+
+[<img src="https://cdn.buymeacoffee.com/buttons/v2/default-violet.png" alt="BuyMeACoffee" width="140">](https://www.buymeacoffee.com/matissjurev)
