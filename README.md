@@ -17,7 +17,9 @@ Gene leverages the openai API to allow you to:
 
 ## How to Use
 1. Get your private key from openai (create an account if you havent alreaady)
-2. In main.ts, set the apikey in configuration to your api key
+2. Insert your API key into the API key section in settings.
+3. Highlight text that contains a prompt or text you want to modify.
+4. Using the command pallet or the commands hotkey, run the command
   
 ## Plans
 
