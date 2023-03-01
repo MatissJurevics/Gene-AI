@@ -2,6 +2,7 @@
 
 Gene is a Free and open source GPT3 powered AI assistant which allows you to create, modify and enhance your notes.
 
+![Demo](./Demo.gif)
 ## Features 
 
 Gene leverages the openai API to allow you to:
