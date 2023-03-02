@@ -1,3 +1,5 @@
+
+// @ts-nocheck
 import {
 	App,
 	Editor,
@@ -44,9 +46,8 @@ export default class GeneAI extends Plugin {
 	async onload() {
 		await this.loadSettings();
 		const configuration = new Configuration({
-			apiKey: this.settings.apiKey, // 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
+			apiKey: this.settings.apiKey, // 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
 		});
-
 		const openai = new OpenAIApi(configuration);
 
 		// This adds a simple command that can be triggered anywhere
@@ -68,14 +69,16 @@ export default class GeneAI extends Plugin {
 						{ line: editor.getCursor("from").line, ch: 0 }
 					)
 					.trim();
-				let message = `Provided context (which may or may not be relavent): "${context}", Complete the following prompt: "${prompt}"`;
+				let message = `Provided context (which may or may not be relavent): "${context}", Complete the following prompt: "${prompt}", (use markdown to format your text)`;
 				new Notice("✒️ Writing...");
 				const completion = await openai.createCompletion({
 					model: this.settings.model,
 					prompt: message,
 					temperature: this.settings.temperature,
 					max_tokens: this.settings.completionTokens,
-				});
+				}).catch(err => {
+					new Notice(`❗${err}`)
+				});;
 
 				editor.replaceSelection(completion.data.choices[0].text);
 				new Notice("Completed! 🚀");
@@ -98,7 +101,7 @@ export default class GeneAI extends Plugin {
 						{ line: editor.getCursor("from").line, ch: 0 }
 					)
 					.trim();
-				let message = `Provided context: (which may or may not be relavent) "${context}", Summarise the following: "${prompt}"`;
+				let message = `Provided context: (which may or may not be relavent) "${context}", Summarise the following: "${prompt}", (use markdown to format your text)`;
 				new Notice("📝 Summarising...");
 
 				const completion = await openai.createCompletion({
@@ -106,7 +109,9 @@ export default class GeneAI extends Plugin {
 					prompt: message,
 					temperature: this.settings.temperature,
 					max_tokens: this.settings.summariseTokens,
-				});
+				}).catch(err => {
+					new Notice(`❗${err}`)
+				});;
 
 				editor.replaceSelection(
 					`## Summary\n\n${completion.data.choices[0].text?.trim()}`
@@ -144,7 +149,9 @@ export default class GeneAI extends Plugin {
 						prompt: message,
 						temperature: this.settings.temperature,
 						max_tokens: this.settings.translateTokens,
-					});
+					}).catch(err => {
+						new Notice(`❗${err}`)
+					});;
 
 					editor.replaceSelection(
 						completion.data.choices[0].text.trim()
@@ -172,14 +179,16 @@ export default class GeneAI extends Plugin {
 				let message: string;
 
 				new EditPrompt(this.app, async (result) => {
-					message = `Provided context (which may or may not be relavent): "${context}", Edit the following: "${prompt}" so that the following demand is met: "${result}"`;
-					new Notice("Loading...");
+					message = `Provided context (which may or may not be relavent): "${context}", Edit the following: "${prompt}" so that the following demand is met: "${result}", (use markdown to format your text)`;
+					new Notice("✍️ Editing...");
 					const completion = await openai.createCompletion({
 						model: this.settings.model,
 						prompt: message,
 						temperature: this.settings.temperature,
 						max_tokens: this.settings.modifyTokens,
-					});
+					}).catch(err => {
+						new Notice(`❗${err}`)
+					});;
 
 					editor.replaceSelection(
 						completion.data.choices[0].text.trim()
@@ -201,7 +210,7 @@ export default class GeneAI extends Plugin {
 						{ line: editor.getCursor("from").line, ch: 0 }
 					)
 					.trim();
-				let message = `Provided context (which may or may not be relavent): "${context}", Elaborate on the following: "${prompt}"`;
+				let message = `Provided context (which may or may not be relavent): "${context}", Elaborate on the following: "${prompt}", (use markdown to format your text)`;
 				new Notice("📝 Elaborating...");
 
 				const completion = await openai.createCompletion({
@@ -209,6 +218,8 @@ export default class GeneAI extends Plugin {
 					prompt: message,
 					temperature: this.settings.temperature,
 					max_tokens: this.settings.elaborateTokens,
+				}).catch(err => {
+					new Notice(`❗${err}`)
 				});
 
 				editor.replaceSelection(

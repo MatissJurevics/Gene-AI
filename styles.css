@@ -7,5 +7,38 @@ If your plugin does not need CSS, delete this file.
 
 */
 .space {
-    margin-top: 2em ;
+    margin-top: 1em ;
+}
+.langText { 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+}
+.langText > * {
+    margin: 0.5em 0;
+}
+.langText .setting-item-name {
+    font-size: 1.8em;
+    font-weight: medium;
+}
+.langText input {
+    padding: 1em;
+    font-size: 1.3em;
+}
+.submitBtn {
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.submitBtn .setting-item-control {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.submitBtn .setting-item-control button {
+    padding: 1.2em;
+    font-size: 1.3em;
+    cursor: pointer;
 }

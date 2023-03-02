@@ -14,6 +14,7 @@ export class TranslatePrompt extends Modal {
 
     contentEl.createEl("div", { cls: "space" });
     new Setting(contentEl)
+      .setClass("langText")
       .setName("Language 🚀")
       .addText((text) =>
         text.onChange((value) => {
@@ -21,6 +22,7 @@ export class TranslatePrompt extends Modal {
         }));
 
     new Setting(contentEl)
+      .setClass("submitBtn")
       .addButton((btn) =>
         btn
           .setButtonText("Submit")
@@ -51,9 +53,8 @@ export class EditPrompt extends Modal {
   onOpen() {
     const { contentEl } = this;
 
-    contentEl.createEl("h2", { text: "AI Editing" });
-
     new Setting(contentEl)
+    .setClass("langText")
       .setName("How do you want to Edit the text?")
       .addText((text) =>
         text.onChange((value) => {
@@ -63,6 +64,7 @@ export class EditPrompt extends Modal {
     new Setting(contentEl)
       .addButton((btn) =>
         btn
+          .setClass("submitBtn")
           .setButtonText("Submit")
           .setCta()
           .onClick(() => {
