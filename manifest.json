@@ -1,7 +1,7 @@
 {
 	"id": "gene-ai",
 	"name": "Gene 🧬",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"minAppVersion": "0.15.0",
 	"description": "Gene is an ai assistant for your second brain. It makes it easier than ever to creaate, manage and modify your notes. Gene is a plugin for Obsidian.md",
 	"author": "Matiss Jurevics",
