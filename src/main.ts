@@ -1,4 +1,3 @@
-
 // @ts-nocheck
 import {
 	App,
@@ -71,16 +70,38 @@ export default class GeneAI extends Plugin {
 					.trim();
 				let message = `Provided context (which may or may not be relavent): "${context}", Complete the following prompt: "${prompt}", (use markdown to format your text)`;
 				new Notice("✒️ Writing...");
-				const completion = await openai.createCompletion({
-					model: this.settings.model,
-					prompt: message,
-					temperature: this.settings.temperature,
-					max_tokens: this.settings.completionTokens,
-				}).catch(err => {
-					new Notice(`❗${err}`)
-				});;
+				let completion;
 
-				editor.replaceSelection(completion.data.choices[0].text);
+				if (this.settings.model === "gpt-3.5-turbo") {
+					completion = await openai
+						.createChatCompletion({
+							model: this.settings.model,
+							messages: [
+								{
+									role: "user",
+									content: message,
+								},
+							],
+							max_tokens: this.settings.completionTokens,
+							temperature: this.settings.temperature,
+						})
+						.catch((err) => {
+							new Notice(`❗${err}`);
+						});
+				} else {
+					completion = await openai
+						.createCompletion({
+							model: this.settings.model,
+							prompt: message,
+							temperature: this.settings.temperature,
+							max_tokens: this.settings.completionTokens,
+						})
+						.catch((err) => {
+							new Notice(`❗${err}`);
+						});
+				}
+
+				editor.replaceSelection(completion.data.choices[0].message.content.trim());
 				new Notice("Completed! 🚀");
 			},
 		});
@@ -104,17 +125,39 @@ export default class GeneAI extends Plugin {
 				let message = `Provided context: (which may or may not be relavent) "${context}", Summarise the following: "${prompt}", (use markdown to format your text)`;
 				new Notice("📝 Summarising...");
 
-				const completion = await openai.createCompletion({
-					model: this.settings.model,
-					prompt: message,
-					temperature: this.settings.temperature,
-					max_tokens: this.settings.summariseTokens,
-				}).catch(err => {
-					new Notice(`❗${err}`)
-				});;
+				let completion;
 
+				if (this.settings.model === "gpt-3.5-turbo") {
+					completion = await openai
+						.createChatCompletion({
+							model: this.settings.model,
+							messages: [
+								{
+									role: "user",
+									content: message,
+								},
+							],
+							max_tokens: this.settings.summariseTokens,
+							temperature: this.settings.temperature,
+						})
+						.catch((err) => {
+							new Notice(`❗${err}`);
+						});
+				} else {
+					completion = await openai
+						.createCompletion({
+							model: this.settings.model,
+							prompt: message,
+							temperature: this.settings.temperature,
+							max_tokens: this.settings.summariseTokens,
+						})
+						.catch((err) => {
+							new Notice(`❗${err}`);
+						});
+				}
+				console.log(completion.data.choices[0].message)
 				editor.replaceSelection(
-					`## Summary\n\n${completion.data.choices[0].text?.trim()}`
+					`## Summary\n\n${completion.data.choices[0].message.content.trim()}`
 				);
 
 				new Notice("Summarised! 🚀");
@@ -144,17 +187,39 @@ export default class GeneAI extends Plugin {
 					language = result;
 					let message = `Provided context (which may or may not be relavent): "${context}", Translate the following: "${prompt}" into ${language}`;
 					new Notice("📖 Translating...");
-					const completion = await openai.createCompletion({
-						model: this.settings.model,
-						prompt: message,
-						temperature: this.settings.temperature,
-						max_tokens: this.settings.translateTokens,
-					}).catch(err => {
-						new Notice(`❗${err}`)
-					});;
+					let completion;
+
+					if (this.settings.model === "gpt-3.5-turbo") {
+						completion = await openai
+							.createChatCompletion({
+								model: this.settings.model,
+								messages: [
+									{
+										role: "user",
+										content: message,
+									},
+								],
+								max_tokens: this.settings.translateTokens,
+								temperature: this.settings.temperature,
+							})
+							.catch((err) => {
+								new Notice(`❗${err}`);
+							});
+					} else {
+						completion = await openai
+							.createCompletion({
+								model: this.settings.model,
+								prompt: message,
+								temperature: this.settings.temperature,
+								max_tokens: this.settings.translateTokens,
+							})
+							.catch((err) => {
+								new Notice(`❗${err}`);
+							});
+					}
 
 					editor.replaceSelection(
-						completion.data.choices[0].text.trim()
+						completion.data.choices[0].message.content.trim()
 					);
 				}).open();
 			},
@@ -181,17 +246,39 @@ export default class GeneAI extends Plugin {
 				new EditPrompt(this.app, async (result) => {
 					message = `Provided context (which may or may not be relavent): "${context}", Edit the following: "${prompt}" so that the following demand is met: "${result}", (use markdown to format your text)`;
 					new Notice("✍️ Editing...");
-					const completion = await openai.createCompletion({
-						model: this.settings.model,
-						prompt: message,
-						temperature: this.settings.temperature,
-						max_tokens: this.settings.modifyTokens,
-					}).catch(err => {
-						new Notice(`❗${err}`)
-					});;
+					let completion;
+
+					if (this.settings.model === "gpt-3.5-turbo") {
+						completion = await openai
+							.createChatCompletion({
+								model: this.settings.model,
+								messages: [
+									{
+										role: "user",
+										content: message,
+									},
+								],
+								max_tokens: this.settings.modifyTokens,
+								temperature: this.settings.temperature,
+							})
+							.catch((err) => {
+								new Notice(`❗${err}`);
+							});
+					} else {
+						completion = await openai
+							.createCompletion({
+								model: this.settings.model,
+								prompt: message,
+								temperature: this.settings.temperature,
+								max_tokens: this.settings.modifyTokens,
+							})
+							.catch((err) => {
+								new Notice(`❗${err}`);
+							});
+					}
 
 					editor.replaceSelection(
-						completion.data.choices[0].text.trim()
+						completion.data.choices[0].message.content.trim()
 					);
 					new Notice("Edited! 🚀");
 				}).open();
@@ -213,17 +300,37 @@ export default class GeneAI extends Plugin {
 				let message = `Provided context (which may or may not be relavent): "${context}", Elaborate on the following: "${prompt}", (use markdown to format your text)`;
 				new Notice("📝 Elaborating...");
 
-				const completion = await openai.createCompletion({
-					model: this.settings.model,
-					prompt: message,
-					temperature: this.settings.temperature,
-					max_tokens: this.settings.elaborateTokens,
-				}).catch(err => {
-					new Notice(`❗${err}`)
-				});
+				let completion;
+				
+				if (this.settings.model === "gpt-3.5-turbo") {
+					completion = await openai
+						.createChatCompletion({
+							model: this.settings.model,
+							messages: [
+								{
+									role: "user",
+									content: message,
+								},
+							],
+							max_tokens: this.settings.elaborateTokens,
+							temperature: this.settings.temperature,
+						})
+						.catch((err) => {
+							new Notice(`❗${err}`);
+						});
+				} else {
+					completion = await openai.createCompletion({
+						model: this.settings.model,
+						prompt: message,
+						temperature: this.settings.temperature,
+						max_tokens: this.settings.elaborateTokens,
+					}).catch(err => {
+						new Notice(`❗${err}`)
+					});;
+				}
 
 				editor.replaceSelection(
-					`${completion.data.choices[0].text?.trim()}`
+					`${completion.data.choices[0].message.content.trim()}`
 				);
 
 				new Notice("Elaborated! 🚀");
@@ -252,4 +359,3 @@ export default class GeneAI extends Plugin {
 		await this.saveData(this.settings);
 	}
 }
-
