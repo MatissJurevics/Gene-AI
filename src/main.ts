@@ -155,7 +155,6 @@ export default class GeneAI extends Plugin {
 							new Notice(`❗${err}`);
 						});
 				}
-				console.log(completion.data.choices[0].message)
 				editor.replaceSelection(
 					`## Summary\n\n${completion.data.choices[0].message.content.trim()}`
 				);
