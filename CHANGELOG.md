@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/MatissJurevics/obsidian-plugin/compare/1.1.0...1.1.1) (2023-03-06)
+
+
+### Bug Fixes
+
+* added LICENCE ([f7a6983](https://github.com/MatissJurevics/obsidian-plugin/commit/f7a698337b18bc635faf149041c118995337b8a9))
+
 ## [1.1.0](https://github.com/MatissJurevics/obsidian-plugin/compare/1.0.2...1.1.0) (2023-03-06)
 
 
