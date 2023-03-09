@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.3](https://github.com/MatissJurevics/obsidian-plugin/compare/1.1.2...1.1.3) (2023-03-09)
+
+
+### Bug Fixes
+
+* removed hotkeys, redundant code and changed name of settings ([9d86be8](https://github.com/MatissJurevics/obsidian-plugin/commit/9d86be834e2c51a5a28013df0704c7e2dfd12fae))
+
 ### [1.1.2](https://github.com/MatissJurevics/obsidian-plugin/compare/1.1.1...1.1.2) (2023-03-06)
 
 
