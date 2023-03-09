@@ -17,7 +17,7 @@ import { SettingTab } from "./settings/settings";
 dotenv.config();
 // Remember to rename these classes and interfaces!
 
-interface MyPluginSettings {
+interface Settings {
 	apiKey: string;
 	summariseTokens: number;
 	completionTokens: number;
@@ -28,7 +28,7 @@ interface MyPluginSettings {
 	model: string;
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
+const DEFAULT_SETTINGS: Settings = {
 	apiKey: "",
 	summariseTokens: 364,
 	completionTokens: 364,
@@ -40,7 +40,7 @@ const DEFAULT_SETTINGS: MyPluginSettings = {
 };
 
 export default class GeneAI extends Plugin {
-	settings: MyPluginSettings;
+	settings: Settings;
 
 	async onload() {
 		await this.loadSettings();
@@ -53,7 +53,6 @@ export default class GeneAI extends Plugin {
 		this.addCommand({
 			id: "aicomp",
 			name: "Complete From Prompt",
-			hotkeys: [{ modifiers: ["Alt", "Shift"], key: "c" }],
 
 			editorCallback: async (editor: Editor, view: MarkdownView) => {
 				// Check if the user has an api key
@@ -109,7 +108,6 @@ export default class GeneAI extends Plugin {
 		this.addCommand({
 			id: "summarise",
 			name: "Summarise",
-			hotkeys: [{ modifiers: ["Alt", "Shift"], key: "s" }],
 			editorCallback: async (editor: Editor, view: MarkdownView) => {
 				if (this.settings.apiKey === "") {
 					new Notice("Please set your API key in the settings");
@@ -166,7 +164,6 @@ export default class GeneAI extends Plugin {
 		this.addCommand({
 			id: "translate",
 			name: "Translate",
-			hotkeys: [{ modifiers: ["Alt", "Shift"], key: "t" }],
 
 			editorCallback: async (editor: Editor, view: MarkdownView) => {
 				if (this.settings.apiKey === "") {
@@ -227,7 +224,6 @@ export default class GeneAI extends Plugin {
 		this.addCommand({
 			id: "modify",
 			name: "Modify",
-			hotkeys: [{ modifiers: ["Alt", "Shift"], key: "m" }],
 			editorCallback: async (editor: Editor, view: MarkdownView) => {
 				if (this.settings.apiKey === "") {
 					new Notice("Please set your API key in the settings");
@@ -287,7 +283,6 @@ export default class GeneAI extends Plugin {
 		this.addCommand({
 			id: "elaborate",
 			name: "Elaborate",
-			hotkeys: [{ modifiers: ["Alt", "Shift"], key: "e" }],
 			editorCallback: async (editor: Editor, view: MarkdownView) => {
 				const prompt = editor.getSelection();
 				const context = editor
@@ -338,10 +333,7 @@ export default class GeneAI extends Plugin {
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new SettingTab(this.app, this));
 
-		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-		this.registerInterval(
-			window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
-		);
+		
 	}
 
 	onunload() {}
