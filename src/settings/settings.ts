@@ -137,11 +137,11 @@ export class SettingTab extends PluginSettingTab {
 			)
 			.addDropdown((val) =>
 				val
+					.addOption("gpt-3.5-turbo", "(Beta) ChatGPT")
 					.addOption("text-davinci-003", "DaVinci")
 					.addOption("text-curie-001", "Curie")
 					.addOption("text-babbage-001", "Babbage")
 					.addOption("text-ada-001", "Ada")
-					.addOption("gpt-3.5-turbo", "(Beta) ChatGPT")
 					.setValue(this.plugin.settings.model)
 					.onChange(async (value: string) => {
 						this.plugin.settings.model = value;

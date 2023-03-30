@@ -11,17 +11,15 @@ Gene leverages the openai API to allow you to:
 - Edit an area of highlighted text.
 - Translate a selected area into whatever language you want.
 
-## How to Install
-1. Download the repository to your local pc
-2. Move the zip file into your plugins directory (/Documents/Obsidian/\[vaultName]/.obsidian/plugins)
-3. Unzip the plugin into that directory
-
 ## How to Use
-1. Get your private key from openai (create an account if you havent alreaady)
-2. Insert your API key into the API key section in settings.
-3. Highlight text that contains a prompt or text you want to modify.
-4. Using the command pallet or the commands hotkey, run the command
-  
+1. Go to the [OpenAI website](https://platform.openai.com/) and create an account.
+2. Go to the [OpenAI dashboard](https://platform.openai.com/account/api-keys) and create an API key.
+3. Go into settings in obsidian and enable the Gene plugin.
+4. Go to the Gene settings and paste your API key into the API key field.
+
+## F.A.Q
+1. **I am getting an error after inserting my API key**
+    - Sometimes OpenAI requires you to verify billing details before you can use the API. Dont worry though because OpenAI provides you with **$18 of free credits for the first 3 months** and it will not cost more than $2 a month afterwards.
 ## Plans
 
 - Shortcut to have Gene help generate ideas (Like Notion AI)
