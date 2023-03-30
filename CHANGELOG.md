@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.4](https://github.com/MatissJurevics/Gene-AI/compare/1.1.3...1.1.4) (2023-03-30)
+
+
+### Bug Fixes
+
+* update readme in last commit ([db18c73](https://github.com/MatissJurevics/Gene-AI/commit/db18c73618937af55b3e0672400e2e294d967d22))
+
 ### [1.1.3](https://github.com/MatissJurevics/obsidian-plugin/compare/1.1.2...1.1.3) (2023-03-09)
 
 
