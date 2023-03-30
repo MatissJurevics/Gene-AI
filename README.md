@@ -24,7 +24,7 @@ Gene leverages the openai API to allow you to:
 
 - Shortcut to have Gene help generate ideas (Like Notion AI)
 
-## Sponsor
+## Sponsor Me
 
 
 [<img src="https://cdn.buymeacoffee.com/buttons/v2/default-violet.png" alt="BuyMeACoffee" width="140">](https://www.buymeacoffee.com/matissjurev)
