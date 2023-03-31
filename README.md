@@ -12,7 +12,7 @@ Gene leverages the openai API to allow you to:
 - Translate a selected area into whatever language you want.
 - Summarise the text above.
 
-## How to Use
+# How to Use
 1. Go to the [OpenAI website](https://platform.openai.com/) and create an account.
 2. Go to the [OpenAI dashboard](https://platform.openai.com/account/api-keys) and create an API key.
 3. Go into settings in obsidian and enable the Gene plugin.
