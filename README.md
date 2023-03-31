@@ -1,6 +1,6 @@
 # Gene: An AI assistant for Obsidian
 
-Gene is a Free and open source GPT3 powered AI assistant which allows you to create, modify and enhance your notes.
+Gene is a Free and open source GPT3.5 (ChatGPT) powered AI assistant which allows you to create, modify, Translate and enhance your notes.
 
 ![Demo](./Demo.gif)
 ## Features 
@@ -10,6 +10,7 @@ Gene leverages the openai API to allow you to:
 - Elaborate on a paragraph or bullet point.
 - Edit an area of highlighted text.
 - Translate a selected area into whatever language you want.
+- Summarise the text above.
 
 ## How to Use
 1. Go to the [OpenAI website](https://platform.openai.com/) and create an account.
