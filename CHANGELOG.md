@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.6](https://github.com/MatissJurevics/Gene-AI/compare/1.1.5...1.1.6) (2023-03-31)
+
+
+### Bug Fixes
+
+* updated readme for better text hierarchy ([c3becc7](https://github.com/MatissJurevics/Gene-AI/commit/c3becc7efdce188c92d7cf7ab4a748dc31153193))
+
 ### [1.1.5](https://github.com/MatissJurevics/Gene-AI/compare/1.1.4...1.1.5) (2023-03-31)
 
 
