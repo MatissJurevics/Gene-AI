@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/matissjurevics/gene-ai/compare/1.1.6...1.2.0) (2023-05-16)
+
+
+### Features
+
+* added gpt-4 for translation alongside appropriate setting. Changed default model to gpt-3.5 ([5910103](https://github.com/matissjurevics/gene-ai/commit/59101037f68f63f72321854d2270976d7d61d94e))
+
 ### [1.1.6](https://github.com/MatissJurevics/Gene-AI/compare/1.1.5...1.1.6) (2023-03-31)
 
 
