@@ -1,4 +1,5 @@
 // @ts-nocheck
+
 import {
 	App,
 	Editor,
@@ -13,10 +14,10 @@ import { Configuration, OpenAIApi } from "openai";
 import * as dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 import { TranslatePrompt, EditPrompt } from "./modals";
 import { SettingTab } from "./settings/settings";
+import { OpenAI } from "openai-streams"
 
 dotenv.config();
-// Remember to rename these classes and interfaces!
-
+// interfaces and default settings for the setting tab
 interface Settings {
 	apiKey: string;
 	summariseTokens: number;
@@ -43,6 +44,7 @@ const DEFAULT_SETTINGS: Settings = {
 
 export default class GeneAI extends Plugin {
 	settings: Settings;
+	
 
 	async onload() {
 		await this.loadSettings();
@@ -51,10 +53,10 @@ export default class GeneAI extends Plugin {
 		});
 		const openai = new OpenAIApi(configuration);
 
-		// This adds a simple command that can be triggered anywhere
+		// The Completion command
 		this.addCommand({
 			id: "aicomp",
-			name: "Complete From Prompt",
+			name: "Complete From Prooompt",
 
 			editorCallback: async (editor: Editor, view: MarkdownView) => {
 				// Check if the user has an api key
@@ -62,17 +64,29 @@ export default class GeneAI extends Plugin {
 					new Notice("Please set your API key in the settings");
 					return;
 				}
+				// Get the prompt from the user selected area
 				const prompt = editor.getSelection();
+
+				// Set the context to the text above the prompt
 				const context = editor
 					.getRange(
 						{ line: 0, ch: 0 },
 						{ line: editor.getCursor("from").line, ch: 0 }
 					)
 					.trim();
+				
+				const currentCursor = editor.getCursor("from").line;	
+				// The prompt itself
 				let message = `Provided context (which may or may not be relavent): "${context}", Complete the following prompt: "${prompt}", (use markdown to format your text)`;
+				// Notice to inform the user that the process is going on
 				new Notice("✒️ Writing...");
 				let completion;
-
+				
+				// The code below contains the original 
+				// implementation of the chat completion without streams.
+				// This will be replaced in the future
+				
+				// Check to see if the user is using a chat model
 				if (this.settings.model === "gpt-3.5-turbo") {
 					completion = await openai
 						.createChatCompletion({
@@ -85,10 +99,45 @@ export default class GeneAI extends Plugin {
 							],
 							max_tokens: this.settings.completionTokens,
 							temperature: this.settings.temperature,
-						})
+							stream: true,
+						}, 
+						{ 
+			responseType: 'stream',
+			onDownloadProgress: (progressEvent) => {
+				// get the payload
+				let payload: string = progressEvent.currentTarget.response;
+				// return if the payload is done
+				if (payload.includes("[DONE]")) {
+					return
+				}
+
+				// Turn the payload into valid JSON	
+				const result = payload
+				.replace(/data:\s*/g, "")
+				.replace(/[\r\n\t]/g, "")
+				.split("}{")
+				.join("},{");
+				  const cleanedJsonString = `[${result}]`;
+				
+				try {
+					let parsed = JSON.parse(cleanedJsonString);
+					if (parsed.length === 1) {
+						return
+					}
+					let last = parsed[parsed.length - 1];
+					let content = last.choices[0].delta.content;
+					editor.replaceSelection(content);
+				} catch (e) {
+					console.log(e);
+				}
+			}
+		 }
+						)
 						.catch((err) => {
 							new Notice(`❗${err}`);
 						});
+				
+					
 				} else {
 					completion = await openai
 						.createCompletion({
@@ -102,11 +151,12 @@ export default class GeneAI extends Plugin {
 						});
 				}
 
+				// Replace selected area with the completion
 				editor.replaceSelection(completion.data.choices[0].message.content.trim());
 				new Notice("Completed! 🚀");
 			},
 		});
-
+		// Command to summarise highlighted content.
 		this.addCommand({
 			id: "summarise",
 			name: "Summarise",
@@ -139,7 +189,40 @@ export default class GeneAI extends Plugin {
 							],
 							max_tokens: this.settings.summariseTokens,
 							temperature: this.settings.temperature,
-						})
+							stream: true,
+						},
+						{ 
+			responseType: 'stream',
+			onDownloadProgress: (progressEvent) => {
+				// get the payload
+				let payload: string = progressEvent.currentTarget.response;
+				// return if the payload is done
+				if (payload.includes("[DONE]")) {
+					return
+				}
+
+				// Turn the payload into valid JSON	
+				const result = payload
+				.replace(/data:\s*/g, "")
+				.replace(/[\r\n\t]/g, "")
+				.split("}{")
+				.join("},{");
+				  const cleanedJsonString = `[${result}]`;
+				
+				try {
+					let parsed = JSON.parse(cleanedJsonString);
+					if (parsed.length === 1) {
+						return
+					}
+					let last = parsed[parsed.length - 1];
+					let content = last.choices[0].delta.content;
+					editor.replaceSelection(content);
+				} catch (e) {
+					console.log(e);
+				}
+			}
+		 }
+						)
 						.catch((err) => {
 							new Notice(`❗${err}`);
 						});
@@ -155,14 +238,12 @@ export default class GeneAI extends Plugin {
 							new Notice(`❗${err}`);
 						});
 				}
-				editor.replaceSelection(
-					`## Summary\n\n${completion.data.choices[0].message.content.trim()}`
-				);
+				
 
 				new Notice("Summarised! 🚀");
 			},
 		});
-
+		// Command to translate highlighted content.
 		this.addCommand({
 			id: "translate",
 			name: "Translate",
@@ -173,12 +254,7 @@ export default class GeneAI extends Plugin {
 					return;
 				}
 				const prompt = editor.getSelection();
-				const context = editor
-					.getRange(
-						{ line: 0, ch: 0 },
-						{ line: editor.getCursor("from").line, ch: 0 }
-					)
-					.trim();
+				
 				let language = "english";
 
 				// Use GPT-4 if enabled
@@ -187,7 +263,7 @@ export default class GeneAI extends Plugin {
 
 				new TranslatePrompt(this.app, async (result) => {
 					language = result;
-					let message = `Provided context (which may or may not be relavent): "${context}", Translate the following: "${prompt}" into ${language}`;
+					let message = `Translate the following: ${prompt} into ${language}`;
 					new Notice("📖 Translating...");
 					let completion;
 
@@ -203,7 +279,40 @@ export default class GeneAI extends Plugin {
 								],
 								max_tokens: this.settings.translateTokens,
 								temperature: this.settings.temperature,
-							})
+								stream: true,
+							},
+							{ 
+			responseType: 'stream',
+			onDownloadProgress: (progressEvent) => {
+				// get the payload
+				let payload: string = progressEvent.currentTarget.response;
+				// return if the payload is done
+				if (payload.includes("[DONE]")) {
+					return
+				}
+
+				// Turn the payload into valid JSON	
+				const result = payload
+				.replace(/data:\s*/g, "")
+				.replace(/[\r\n\t]/g, "")
+				.split("}{")
+				.join("},{");
+				  const cleanedJsonString = `[${result}]`;
+				
+				try {
+					let parsed = JSON.parse(cleanedJsonString);
+					if (parsed.length === 1) {
+						return
+					}
+					let last = parsed[parsed.length - 1];
+					let content = last.choices[0].delta.content;
+					editor.replaceSelection(content);
+				} catch (e) {
+					console.log(e);
+				}
+			}
+		 }
+							)
 							.catch((err) => {
 								new Notice(`❗${err}`);
 							});
@@ -226,7 +335,7 @@ export default class GeneAI extends Plugin {
 				}).open();
 			},
 		});
-
+		// Command to modify highlighted content in a specified way
 		this.addCommand({
 			id: "modify",
 			name: "Modify",
@@ -261,7 +370,39 @@ export default class GeneAI extends Plugin {
 								],
 								max_tokens: this.settings.modifyTokens,
 								temperature: this.settings.temperature,
-							})
+								stream: true,
+							},
+							{ 
+			responseType: 'stream',
+			onDownloadProgress: (progressEvent) => {
+				// get the payload
+				let payload: string = progressEvent.currentTarget.response;
+				// return if the payload is done
+				if (payload.includes("[DONE]")) {
+					return
+				}
+
+				// Turn the payload into valid JSON	
+				const result = payload
+				.replace(/data:\s*/g, "")
+				.replace(/[\r\n\t]/g, "")
+				.split("}{")
+				.join("},{");
+				  const cleanedJsonString = `[${result}]`;
+				
+				try {
+					let parsed = JSON.parse(cleanedJsonString);
+					if (parsed.length === 1) {
+						return
+					}
+					let last = parsed[parsed.length - 1];
+					let content = last.choices[0].delta.content;
+					editor.replaceSelection(content);
+				} catch (e) {
+					console.log(e);
+				}
+			}
+		 })
 							.catch((err) => {
 								new Notice(`❗${err}`);
 							});
@@ -285,7 +426,7 @@ export default class GeneAI extends Plugin {
 				}).open();
 			},
 		});
-
+		// Command to elaborate on highlighted content
 		this.addCommand({
 			id: "elaborate",
 			name: "Elaborate",
@@ -314,7 +455,39 @@ export default class GeneAI extends Plugin {
 							],
 							max_tokens: this.settings.elaborateTokens,
 							temperature: this.settings.temperature,
-						})
+							stream: true,
+						},
+						{ 
+			responseType: 'stream',
+			onDownloadProgress: (progressEvent) => {
+				// get the payload
+				let payload: string = progressEvent.currentTarget.response;
+				// return if the payload is done
+				if (payload.includes("[DONE]")) {
+					return
+				}
+
+				// Turn the payload into valid JSON	
+				const result = payload
+				.replace(/data:\s*/g, "")
+				.replace(/[\r\n\t]/g, "")
+				.split("}{")
+				.join("},{");
+				  const cleanedJsonString = `[${result}]`;
+				
+				try {
+					let parsed = JSON.parse(cleanedJsonString);
+					if (parsed.length === 1) {
+						return
+					}
+					let last = parsed[parsed.length - 1];
+					let content = last.choices[0].delta.content;
+					editor.replaceSelection(content);
+				} catch (e) {
+					console.log(e);
+				}
+			}
+		 })
 						.catch((err) => {
 							new Notice(`❗${err}`);
 						});
