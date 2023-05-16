@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.1](https://github.com/matissjurevics/gene-ai/compare/1.3.0...1.3.1) (2023-05-16)
+
+
+### Bug Fixes
+
+* changed spelling of promt back ([ef6bd7c](https://github.com/matissjurevics/gene-ai/commit/ef6bd7c6da71915dc6aa01498fade5de92a89b70))
+
 ## [1.3.0](https://github.com/matissjurevics/gene-ai/compare/1.2.0...1.3.0) (2023-05-16)
 
 
