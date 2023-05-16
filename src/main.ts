@@ -56,7 +56,7 @@ export default class GeneAI extends Plugin {
 		// The Completion command
 		this.addCommand({
 			id: "aicomp",
-			name: "Complete From Prooompt",
+			name: "Complete From prompt",
 
 			editorCallback: async (editor: Editor, view: MarkdownView) => {
 				// Check if the user has an api key
