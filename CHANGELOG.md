@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/matissjurevics/gene-ai/compare/1.2.0...1.3.0) (2023-05-16)
+
+
+### Features
+
+* using streams for better text generation ([89a7754](https://github.com/matissjurevics/gene-ai/commit/89a77548b1ca15c1522a6bbf5cff40456c19d889))
+
 ## [1.2.0](https://github.com/matissjurevics/gene-ai/compare/1.1.6...1.2.0) (2023-05-16)
 
 
