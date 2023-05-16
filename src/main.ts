@@ -26,6 +26,7 @@ interface Settings {
 	translateTokens: number;
 	temperature: number;
 	model: string;
+	gpt4Translation: boolean;
 }
 
 const DEFAULT_SETTINGS: Settings = {
@@ -36,7 +37,8 @@ const DEFAULT_SETTINGS: Settings = {
 	modifyTokens: 364,
 	translateTokens: 364,
 	temperature: 0.7,
-	model: "text-davinci-003",
+	model: "gpt-3.5-turbo",
+	gpt4Translation: false,
 };
 
 export default class GeneAI extends Plugin {
@@ -179,6 +181,10 @@ export default class GeneAI extends Plugin {
 					.trim();
 				let language = "english";
 
+				// Use GPT-4 if enabled
+				let model:string;
+				this.settings.gpt4Translation ? model = "gpt-4" : model = this.settings.model;
+
 				new TranslatePrompt(this.app, async (result) => {
 					language = result;
 					let message = `Provided context (which may or may not be relavent): "${context}", Translate the following: "${prompt}" into ${language}`;
@@ -188,7 +194,7 @@ export default class GeneAI extends Plugin {
 					if (this.settings.model === "gpt-3.5-turbo") {
 						completion = await openai
 							.createChatCompletion({
-								model: this.settings.model,
+								model: model,
 								messages: [
 									{
 										role: "user",

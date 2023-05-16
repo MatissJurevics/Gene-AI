@@ -70,7 +70,8 @@ export class SettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
-
+		
+		
 		new Setting(containerEl)
 			.setName("AI Completion")
 			.setDesc("Tokens used for AI completion")
@@ -130,14 +131,27 @@ export class SettingTab extends PluginSettingTab {
 					})
 			);
 
+			new Setting(containerEl)
+			.setName("GPT-4 for Translation")
+			.setDesc("Use GPT-4 for translation. This will provide more accurate translations into other languages. (Will not work if you do not have access to GPT-4)")
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.gpt4Translation)
+					.onChange(async (value: boolean) => {
+						this.plugin.settings.gpt4Translation = value;
+						await this.plugin.saveSettings();
+					})
+			);
+
 		new Setting(containerEl)
 			.setName("Model")
 			.setDesc(
-				"The model used for the AI. Different models have different strengths and weaknesses. (Note that the price changes with the model used)"
+				"The model used for the AI. Different models have different strengths and weaknesses. (Note that the price changes with the model used) NOTE: Most users will not be able to use GPT-4 as you must join a waitlist for it"
 			)
 			.addDropdown((val) =>
-				val
-					.addOption("gpt-3.5-turbo", "(Beta) ChatGPT")
+			val
+					.addOption("gpt-4", "GPT-4")
+					.addOption("gpt-3.5-turbo", "ChatGPT")
 					.addOption("text-davinci-003", "DaVinci")
 					.addOption("text-curie-001", "Curie")
 					.addOption("text-babbage-001", "Babbage")
