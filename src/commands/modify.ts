@@ -10,7 +10,7 @@ import {
     Notice,
 } from "obsidian";
 import { parsePayload } from "src/utils/parse";
-import { EditPrompt } from "src/modals";
+import { EditPrompt } from "src/modals/editPrompt";
 
 export const modify = async (editor: Editor, settings: any, openai: any, app: any) => {
     if (settings.apiKey === "") {

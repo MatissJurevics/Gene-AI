@@ -9,7 +9,7 @@ import {
     Notice,
 } from "obsidian";
 import { parsePayload } from "src/utils/parse";
-import { TranslatePrompt } from "src/modals";
+import { TranslatePrompt } from "src/modals/translatePrompt";
 
 export const translate = async (editor: Editor, settings: any, openai: any, app: any) => {
     if (settings.apiKey === "") {

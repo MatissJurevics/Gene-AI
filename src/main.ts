@@ -9,7 +9,6 @@ import {
 } from "obsidian";
 import { Configuration, OpenAIApi } from "openai";
 import * as dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
-import { TranslatePrompt, EditPrompt } from "./modals";
 import { SettingTab } from "./settings/settings";
 import { completeFromPrompt } from "./commands/aicomp"; 
 import { elaborate } from "./commands/elaborate";
@@ -43,25 +42,6 @@ const DEFAULT_SETTINGS: Settings = {
 	gpt4Translation: false,
 };
 
-const parsePayload = (payload: string) => {
-	const result = payload
-				.replace(/data:\s*/g, "")
-				.replace(/[\r\n\t]/g, "")
-				.split("}{")
-				.join("},{");
-	const cleanedJsonString = `[${result}]`;
-	try {
-		let parsed = JSON.parse(cleanedJsonString);
-		if (parsed.length === 1) {
-			return
-		}
-		let last = parsed[parsed.length - 1];
-		let content = last.choices[0].delta.content;
-		return content;
-	} catch (e) {
-		throw new Error("Failed to parse JSON");
-	}
-}
 
 
 export default class GeneAI extends Plugin {
@@ -72,7 +52,7 @@ export default class GeneAI extends Plugin {
 		await this.loadSettings();
 		
 		const configuration = new Configuration({
-			apiKey: this.settings.apiKey, // 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
+			apiKey: this.settings.apiKey, 
 		});
 		const openai = new OpenAIApi(configuration);
 		
