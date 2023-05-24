@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.2](https://github.com/matissjurevics/gene-ai/compare/1.3.1...1.3.2) (2023-05-24)
+
+
+### Bug Fixes
+
+* refactored codebase, made it easier to navigate through code by seperating the commands from main (some things still need to be removed) ([79c0f8b](https://github.com/matissjurevics/gene-ai/commit/79c0f8b0098f48951c63a4c80e0e70a4e498379d))
+
 ### [1.3.1](https://github.com/matissjurevics/gene-ai/compare/1.3.0...1.3.1) (2023-05-16)
 
 
