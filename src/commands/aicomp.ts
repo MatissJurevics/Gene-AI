@@ -1,7 +1,4 @@
 /*
-    NOTE: This file is currently not in use. It is a work in progress.
-    This file is for the aicomp command.
-
     The aicomp command takes a users prompt and will query the
     openai api to generate a response.
 */

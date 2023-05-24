@@ -1,6 +1,4 @@
 /*
-    NOTE: This file is currently not in use. It is a work in progress.
-    
     The elaborate command.
 */
 import {
