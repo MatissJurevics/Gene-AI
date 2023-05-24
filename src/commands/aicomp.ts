@@ -1,0 +1,87 @@
+/*
+    NOTE: This file is currently not in use. It is a work in progress.
+    This file is for the aicomp command.
+
+    The aicomp command takes a users prompt and will query the
+    openai api to generate a response.
+*/
+
+
+import {
+	Editor,
+    Notice,
+} from "obsidian";
+import { parsePayload } from "src/utils/parse";
+
+export const completeFromPrompt = async (editor: Editor, settings: any, openai:any) => {
+    if (settings.apiKey === "") {
+		new Notice("Please set your API key in the settings");
+		return;
+	}
+
+	
+
+	const prompt = editor.getSelection();
+	const context = editor
+		.getRange(
+			{ line: 0, ch: 0 },
+			{ line: editor.getCursor("from").line, ch: 0 }
+		)
+		.trim();
+	const currentCursor = editor.getCursor("from").line;	
+	// The prompt itself
+	let message = `Provided context (which may or may not be relavent): "${context}", Complete the following prompt: "${prompt}", (use markdown to format your text)`;
+	// Notice to inform the user that the process is going on
+	new Notice("✒️ Writing...");
+	let completion;
+
+	if (settings.model === "gpt-3.5-turbo") {
+		completion = await openai
+			.createChatCompletion({
+				model: settings.model,
+				messages: [
+					{
+						role: "user",
+						content: message,
+					},
+				],
+				max_tokens: settings.summariseTokens,
+				temperature: settings.temperature,
+				stream: true,
+	},
+	{ 
+		responseType: 'stream',
+		onDownloadProgress: (progressEvent: any) => {
+			// get the payload
+			let payload: string = progressEvent.currentTarget.response;
+			// return if the payload is done
+			if (payload.includes("[DONE]")) {
+				return
+			}
+			try {
+				let content = parsePayload(payload);
+				editor.replaceSelection(content);
+			} catch (e) {
+				console.log(e);
+			}
+		}
+	})
+			.catch((err: string) => {
+				new Notice(`❗${err}`);
+			});
+	} else {
+		completion = await openai
+			.createCompletion({
+				model: settings.model,
+				prompt: message,
+				temperature: settings.temperature,
+				max_tokens: settings.summariseTokens,
+			})
+			.catch((err: string) => {
+				new Notice(`❗${err}`);
+			});
+	}
+
+	new Notice("Completed! 🚀");
+}
+		

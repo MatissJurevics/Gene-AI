@@ -1,16 +1,16 @@
 # Gene: An AI assistant for Obsidian
 
-Gene is a Free and open source GPT3.5 (ChatGPT) powered AI assistant which allows you to create, modify, Translate and enhance your notes.
+Gene is a Free and open source AI assistant which allows you to create, modify, Translate, and overall enhance your notes.
 
 ![Demo](./Demo.gif)
 ## Features 
 
-Gene leverages the openai API to allow you to:
-- Write anything based off of a highlighted prompt.
-- Elaborate on a paragraph or bullet point.
-- Edit an area of highlighted text.
-- Translate a selected area into whatever language you want.
-- Summarise the text above.
+Gene uses the openai API to allow you to:
+- Generate text from a prompt
+- Summarise your notes
+- Modify selected text in any way you want (convert to bullet points, change the tone, etc.)
+- Translate your notes to any language (Including programming languages)
+- Elaborate on something you dont quite understand
 
 # How to Use
 1. Go to the [OpenAI website](https://platform.openai.com/) and create an account.
@@ -23,7 +23,10 @@ Gene leverages the openai API to allow you to:
     - Sometimes OpenAI requires you to verify billing details before you can use the API. Dont worry though because OpenAI provides you with **$18 of free credits for the first 3 months** and it will not cost more than $2 a month afterwards.
 ## Plans
 
-- Shortcut to have Gene help generate ideas (Like Notion AI)
+Note that these are just Ideas that I or users of gene have come up with and are not guaranteed to be implemented. If you have an idea for a feature you can create an issue on github and I will add it to the list.
+
+[ ] Convert file to a set of flashcards.
+[ ] Generate quizes.
 
 ## Sponsor Me
 

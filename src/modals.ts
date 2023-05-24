@@ -79,7 +79,7 @@ export class EditPrompt extends Modal {
   }
 }
 
-
+// I think the code below may be redundant, but I'm not sure so I'm leaving it here for now
 // An idea for an idea prompt modal similar to what notion AI gives you where you can ask the ai to generate ideas for you
 export class IdeaPrompt extends Modal {
   result: string;
