@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.3](https://github.com/matissjurevics/gene-ai/compare/1.3.2...1.3.3) (2023-05-24)
+
+
+### Bug Fixes
+
+* converted modals.ts into a folder with each modal as a seperate file ([bee5e87](https://github.com/matissjurevics/gene-ai/commit/bee5e876e092efe25aba4ffb9fc8d9598288901f))
+
 ### [1.3.2](https://github.com/matissjurevics/gene-ai/compare/1.3.1...1.3.2) (2023-05-24)
 
 
