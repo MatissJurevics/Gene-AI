@@ -21,12 +21,6 @@ Gene uses the openai API to allow you to:
 ## F.A.Q
 1. **I am getting an error after inserting my API key**
     - Sometimes OpenAI requires you to verify billing details before you can use the API. Dont worry though because OpenAI provides you with **$18 of free credits for the first 3 months** and it will not cost more than $2 a month afterwards.
-## Plans
-
-Note that these are just Ideas that I or users of gene have come up with and are not guaranteed to be implemented. If you have an idea for a feature you can create an issue on github and I will add it to the list.
-
-[ ] Convert file to a set of flashcards.
-[ ] Generate quizes.
 
 ## Sponsor Me
 
