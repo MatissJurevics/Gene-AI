@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.4](https://github.com/matissjurevics/gene-ai/compare/1.3.3...1.3.4) (2023-05-27)
+
+
+### Features
+
+* Added stop stream command (may be buggy) ([ca4a209](https://github.com/matissjurevics/gene-ai/commit/ca4a2090f3c0fc9033e14de3c47bc607a7f71f31))
+
 ### [1.3.3](https://github.com/matissjurevics/gene-ai/compare/1.3.2...1.3.3) (2023-05-24)
 
 
