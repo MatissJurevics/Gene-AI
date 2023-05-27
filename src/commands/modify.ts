@@ -28,7 +28,7 @@ export const modify = async (editor: Editor, settings: any, openai: any, app: an
         new Notice("✍️ Editing...");
         let completion;
 
-        if (settings.model === "gpt-3.5-turbo") {
+        if (settings.model === "gpt-3.5-turbo" || settings.model === "gpt-4") {
             completion = await openai
                 .createChatCompletion({
                     model: settings.model,
@@ -48,7 +48,7 @@ onDownloadProgress: (progressEvent:any) => {
     // get the payload
     let payload: string = progressEvent.currentTarget.response;
     // return if the payload is done
-    if (payload.includes("[DONE]")) {
+    if (payload.includes("[DONE]") || settings.allowStream === false) {
         return
     }
 
@@ -74,11 +74,12 @@ onDownloadProgress: (progressEvent:any) => {
                 .catch((err: string) => {
                     new Notice(`❗${err}`);
                 });
+            editor.replaceSelection(
+                completion.data.choices[0].message.content.trim()
+            );
         }
 
-        editor.replaceSelection(
-            completion.data.choices[0].message.content.trim()
-        );
+        
         new Notice("Edited! 🚀");
     }).open();
 }

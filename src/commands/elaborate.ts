@@ -40,7 +40,7 @@ onDownloadProgress: (progressEvent: any) => {
     // get the payload
     let payload: string = progressEvent.currentTarget.response;
     // return if the payload is done
-    if (payload.includes("[DONE]")) {
+    if (payload.includes("[DONE]") || settings.allowStream === false) {
         return
     }
 
@@ -64,11 +64,13 @@ onDownloadProgress: (progressEvent: any) => {
         }).catch((err: string) => {
             new Notice(`❗${err}`);
         });
+        
+        editor.replaceSelection(
+            `${completion.data.choices[0].message.content.trim()}`
+        );
     }
 
-    editor.replaceSelection(
-        `${completion.data.choices[0].message.content.trim()}`
-    );
+    
 
     new Notice("Elaborated! 🚀");
 }

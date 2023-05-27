@@ -25,7 +25,7 @@ export const summarise = async (editor: Editor, settings: any, openai:any) => {
 
     let completion;
 
-    if (settings.model === "gpt-3.5-turbo") {
+    if (settings.model === "gpt-3.5-turbo" || settings.model === "gpt-4") {
         completion = await openai
             .createChatCompletion({
                 model: settings.model,
@@ -45,7 +45,7 @@ onDownloadProgress: (progressEvent: any) => {
     // get the payload
     let payload: string = progressEvent.currentTarget.response;
     // return if the payload is done
-    if (payload.includes("[DONE]")) {
+    if (payload.includes("[DONE]") || settings.allowStream === false) {
         return
     }
 
@@ -73,6 +73,9 @@ onDownloadProgress: (progressEvent: any) => {
             .catch((err: string) => {
                 new Notice(`❗${err}`);
             });
+        editor.replaceSelection(
+            completion.data.choices[0].message.content.trim()
+        );
     }
     
 

@@ -15,6 +15,7 @@ import { elaborate } from "./commands/elaborate";
 import { modify } from "./commands/modify";
 import { translate } from "./commands/translate";
 import { summarise } from "./commands/summarise";
+import { stopStream } from "./commands/stopStream";
 
 dotenv.config();
 // interfaces and default settings for the setting tab
@@ -28,6 +29,7 @@ interface Settings {
 	temperature: number;
 	model: string;
 	gpt4Translation: boolean;
+	allowStream: boolean;
 }
 
 const DEFAULT_SETTINGS: Settings = {
@@ -40,6 +42,7 @@ const DEFAULT_SETTINGS: Settings = {
 	temperature: 0.7,
 	model: "gpt-3.5-turbo",
 	gpt4Translation: false,
+	allowStream: true,
 };
 
 
@@ -55,39 +58,45 @@ export default class GeneAI extends Plugin {
 			apiKey: this.settings.apiKey, 
 		});
 		const openai = new OpenAIApi(configuration);
-		
 
 		// The Completion command
 		this.addCommand({
 			id: "aicomp",
 			name: "Complete From prompt",
 
-			editorCallback: async (editor: Editor, view: MarkdownView) => completeFromPrompt(editor, this.settings, openai),
+			editorCallback: async (editor: Editor) => completeFromPrompt(editor, this.settings, openai),
 		});
 		// Command to summarise highlighted content.
 		this.addCommand({
 			id: "summarise",
 			name: "Summarise",
-			editorCallback: async (editor: Editor, view: MarkdownView) => summarise(editor, this.settings, openai),
+			editorCallback: async (editor: Editor) => summarise(editor, this.settings, openai),
 		});
 		// Command to translate highlighted content.
 		this.addCommand({
 			id: "translate",
 			name: "Translate",
-			editorCallback: async (editor: Editor, view: MarkdownView) => translate(editor, this.settings, openai, this.app)
+			editorCallback: async (editor: Editor) => translate(editor, this.settings, openai, this.app)
 		});
 		// Command to modify highlighted content in a specified way
 		this.addCommand({
 			id: "modify",
 			name: "Modify",
-			editorCallback: async (editor: Editor, view: MarkdownView) => modify(editor, this.settings, openai, this.app)
+			editorCallback: async (editor: Editor) => modify(editor, this.settings, openai, this.app)
 		});
 		// Command to elaborate on highlighted content
 		this.addCommand({
 			id: "elaborate",
 			name: "Elaborate",
-			editorCallback: async (editor: Editor, view: MarkdownView) => elaborate(editor, this.settings, openai)
+			editorCallback: async (editor: Editor) => elaborate(editor, this.settings, openai)
 		});
+		this.addCommand({
+			id: "stopStream",
+			name: "Stop Stream",
+			editorCallback: async (editor: Editor) => stopStream(this.settings)
+		});
+
+
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new SettingTab(this.app, this));
 
